@@ -2,88 +2,156 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ethan's Project Tracking Board</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            font-family: 'Arial', sans-serif;
-            max-width: 1000px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            max-width: 1100px;
             margin: 0 auto;
-            padding: 20px;
-            line-height: 1.6;
-            background-color: #f4f4f4;
+            padding: 60px 40px;
+            line-height: 1.7;
+            background-color: #fcfaf0;
+            color: #363633;
         }
-        h1 {
-            color: #333;
-            text-align: center;
-            border-bottom: 2px solid #666;
-            padding-bottom: 10px;
+        .header {
+            position: relative;
+            margin-bottom: 80px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid #c2b5a6;
+        }
+        .header .watermark {
+            font-family: 'DM Serif Display', serif;
+            font-size: 8rem;
+            color: #e3decc;
+            position: absolute;
+            top: -40px;
+            left: -10px;
+            z-index: 0;
+            line-height: 1;
+            pointer-events: none;
+            user-select: none;
+        }
+        .header h1 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 2.8rem;
+            font-weight: 400;
+            color: #363633;
+            position: relative;
+            z-index: 1;
+        }
+        .header .subtitle {
+            font-size: 0.85rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #80756b;
+            margin-top: 12px;
+            position: relative;
+            z-index: 1;
+        }
+        .section-label {
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: #80756b;
+            margin-bottom: 40px;
         }
         .projects-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
         }
         .project-card {
-            background-color: white;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
+            background-color: #fcfaf0;
+            border-top: 1px solid #c2b5a6;
+            padding: 32px 0;
+            transition: all 0.3s ease;
         }
         .project-card:hover {
-            transform: scale(1.05);
+            border-top-color: #363633;
+        }
+        .project-card .card-number {
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            color: #c2b5a6;
+            margin-bottom: 12px;
+            text-transform: uppercase;
         }
         .project-card h2 {
-            margin-top: 0;
-            color: #2c3e50;
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: #363633;
+            margin-bottom: 12px;
+        }
+        .project-card p {
+            font-size: 0.9rem;
+            color: #80756b;
+            line-height: 1.7;
+            margin-bottom: 24px;
         }
         .project-card a {
-            display: block;
-            text-align: center;
-            background-color: #3498db;
-            color: white;
+            display: inline-block;
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #363633;
             text-decoration: none;
-            padding: 10px;
-            border-radius: 5px;
-            margin-top: 15px;
+            border-bottom: 1px solid #c2b5a6;
+            padding-bottom: 4px;
+            transition: border-color 0.3s ease;
         }
         .project-card a:hover {
-            background-color: #2980b9;
+            border-bottom-color: #363633;
         }
     </style>
 </head>
 <body>
-    <h1>Ethan's Project Tracking Board</h1>
+    <div class="header">
+        <div class="watermark">Projects</div>
+        <h1>Project Tracking Board</h1>
+        <div class="subtitle">01. ——— Active Projects & Ventures</div>
+    </div>
+
+    <div class="section-label">02. ——— Project Overview</div>
     
     <div class="projects-grid">
         <div class="project-card">
+            <div class="card-number">01</div>
             <h2>Email Marketing Agency</h2>
             <p>Growing digital marketing solutions focused on email campaigns and conversion optimization.</p>
-            <a href="projects/email-marketing.html">View Project Dashboard</a>
+            <a href="projects/email-marketing.html">View Dashboard →</a>
         </div>
         
         <div class="project-card">
+            <div class="card-number">02</div>
             <h2>Figma → Klaviyo Plugin</h2>
             <p>Innovative plugin bridging design and marketing automation platforms.</p>
-            <a href="projects/figma-klaviyo-plugin.html">View Project Dashboard</a>
+            <a href="projects/figma-klaviyo-plugin.html">View Dashboard →</a>
         </div>
         
         <div class="project-card">
+            <div class="card-number">03</div>
             <h2>MeetingBackgrounds.com</h2>
             <p>Web application for professional and creative meeting backgrounds.</p>
-            <a href="projects/meeting-backgrounds.html">View Project Dashboard</a>
+            <a href="projects/meeting-backgrounds.html">View Dashboard →</a>
         </div>
         
         <div class="project-card">
+            <div class="card-number">04</div>
             <h2>Personal Fitness Tracker</h2>
             <p>Tracking workout progress, meal prep, and personal health metrics.</p>
-            <a href="projects/fitness-tracker.html">View Project Dashboard</a>
+            <a href="projects/fitness-tracker.html">View Dashboard →</a>
         </div>
         
         <div class="project-card">
+            <div class="card-number">05</div>
             <h2>SaaS Product Ideas</h2>
             <p>Brainstorming and tracking potential software as a service product concepts.</p>
-            <a href="projects/saas-ideas.html">View Project Dashboard</a>
+            <a href="projects/saas-ideas.html">View Dashboard →</a>
         </div>
     </div>
 </body>
