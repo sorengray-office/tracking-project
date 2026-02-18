@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SaaS Product Ideas Dashboard</title>
+    <title>Weekly Review Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -15,46 +15,65 @@
         .header h1 { font-family: 'DM Serif Display', serif; font-size: 2.4rem; font-weight: 400; position: relative; z-index: 1; }
         .header .subtitle { font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: #80756b; margin-top: 10px; position: relative; z-index: 1; }
         .section-label { font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: #80756b; margin: 50px 0 24px; }
-        .idea { border-top: 1px solid #c2b5a6; padding: 28px 0; }
-        .idea h3 { font-family: 'DM Serif Display', serif; font-size: 1.3rem; font-weight: 400; margin-bottom: 10px; }
-        .idea p { font-size: 0.9rem; color: #80756b; margin-bottom: 6px; }
-        .idea strong { color: #363633; font-weight: 500; }
-        .idea .status-badge { display: inline-block; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: #96853b; border: 1px solid #96853b; padding: 2px 10px; margin-bottom: 10px; }
+        .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-bottom: 20px; }
+        .metric { border-top: 1px solid #c2b5a6; padding-top: 20px; }
+        .metric h3 { font-family: 'Inter', sans-serif; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: #80756b; margin-bottom: 8px; font-weight: 500; }
+        .metric p { font-family: 'DM Serif Display', serif; font-size: 2rem; color: #363633; }
+        .metric .detail { font-family: 'Inter', sans-serif; font-size: 0.8rem; color: #80756b; margin-top: 4px; }
         h2 { font-family: 'DM Serif Display', serif; font-size: 1.4rem; font-weight: 400; margin-bottom: 16px; }
         ul { list-style: none; padding: 0; }
         ul li { padding: 12px 0; border-bottom: 1px solid #e3decc; font-size: 0.9rem; color: #80756b; }
         ul li::before { content: "—"; margin-right: 12px; color: #c2b5a6; }
+        .revenue-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; border-top: 1px solid #c2b5a6; padding: 16px 0; }
+        .revenue-row.revenue-header { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: #80756b; font-weight: 500; border-top: none; padding-bottom: 8px; }
+        .revenue-row span { font-size: 0.9rem; color: #80756b; }
+        .revenue-row span:first-child { color: #363633; font-weight: 500; }
     </style>
 </head>
 <body>
     <a href="../index.html" class="back-link">← Back to Projects</a>
 
     <div class="header">
-        <div class="watermark">SaaS</div>
-        <h1>SaaS Product Ideas</h1>
-        <div class="subtitle">01. ——— Project Dashboard</div>
+        <div class="watermark">Review</div>
+        <h1>Weekly Review</h1>
+        <div class="subtitle">01. Project Dashboard</div>
     </div>
 
-    <div class="section-label">02. ——— Active Ideas</div>
-    
-    <div class="idea">
-        <h3>Customer Feedback Analytics Platform</h3>
-        <div class="status-badge">Concept Research</div>
-        <p>AI-driven tool to aggregate and analyze customer feedback across multiple channels</p>
+    <div class="section-label">02. Revenue Tracking</div>
+    <div class="revenue-row revenue-header">
+        <span>Project</span>
+        <span>This Week</span>
+        <span>Last Week</span>
     </div>
-    
-    <div class="idea">
-        <h3>Freelancer Time Tracking & Invoicing App</h3>
-        <div class="status-badge">Initial Wireframing</div>
-        <p>Integrated solution for time tracking, project management, and automated invoicing</p>
+    <div class="revenue-row">
+        <span>Email Marketing Agency</span>
+        <span>$0</span>
+        <span>$0</span>
+    </div>
+    <div class="revenue-row">
+        <span>Figma → Klaviyo Plugin</span>
+        <span>$0</span>
+        <span>$0</span>
+    </div>
+    <div class="revenue-row">
+        <span>MeetingBackgrounds.com</span>
+        <span>$0</span>
+        <span>$0</span>
     </div>
 
-    <div class="section-label">03. ——— Evaluation Criteria</div>
+    <div class="section-label">03. Key Milestones &amp; Wins</div>
     <ul>
-        <li>Market Potential</li>
-        <li>Technical Feasibility</li>
-        <li>Potential Revenue Model</li>
-        <li>Competitive Landscape</li>
+        <li>No data yet</li>
+    </ul>
+
+    <div class="section-label">04. Blockers</div>
+    <ul>
+        <li>No data yet</li>
+    </ul>
+
+    <div class="section-label">05. Next Week's Priorities</div>
+    <ul>
+        <li>No data yet</li>
     </ul>
 </body>
 </html>
