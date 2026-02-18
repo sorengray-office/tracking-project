@@ -83,6 +83,30 @@
       }
     ]
   },
+  "grottoTemplatePackage": {
+    "name": "Grotto Template Package",
+    "stage": "Launched",
+    "totalRevenue": 0,
+    "revenueGoal": 15000,
+    "description": "Pre-built email template package added to website, ready for marketing push",
+    "biggestBlocker": "Marketing",
+    "activeChannels": ["Pinterest"],
+    "inProgressChannels": ["Facebook Ads"],
+    "plannedChannels": ["Google Ads", "Email list", "Twitter"],
+    "todoItems": [
+      "Write email to email list about it",
+      "Post to Twitter",
+      "Finish Facebook Ads creation",
+      "Launch Google Ads"
+    ],
+    "history": [
+      {
+        "date": "2026-02-18",
+        "totalRevenue": 0,
+        "stage": "Launched"
+      }
+    ]
+  },
   "relationships": {
     "familyCheckInFrequency": "Weekly checkbox - checked in with every family member",
     "friendHangoutsPerWeekGoal": 2,

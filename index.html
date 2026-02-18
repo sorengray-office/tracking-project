@@ -150,20 +150,28 @@
         
         <div class="project-card">
             <div class="card-number">04</div>
+            <h2>Grotto Template Package</h2>
+            <p>Pre-built email template package — launched and ready for marketing push.</p>
+            <div class="card-revenue" id="idx-gtp-rev">Loading...</div>
+            <a href="projects/template-package.html">View Dashboard →</a>
+        </div>
+        
+        <div class="project-card">
+            <div class="card-number">05</div>
             <h2>Personal Fitness Tracker</h2>
             <p>Tracking workout progress, meal prep, and personal health metrics.</p>
             <a href="projects/fitness-tracker.html">View Dashboard →</a>
         </div>
         
         <div class="project-card">
-            <div class="card-number">05</div>
+            <div class="card-number">06</div>
             <h2>Relationships</h2>
             <p>Staying connected — family, friends, and dating. Tracking weekly social time and meaningful connections.</p>
             <a href="projects/relationships.html">View Dashboard →</a>
         </div>
         
         <div class="project-card">
-            <div class="card-number">06</div>
+            <div class="card-number">07</div>
             <h2>Weekly Review</h2>
             <p>Week-over-week progress across all projects. Revenue, milestones, and key moves.</p>
             <a href="projects/weekly-review.html">View Dashboard →</a>
@@ -176,6 +184,7 @@
             document.getElementById('idx-gd-rev').textContent = fmt(d.grottoDigital.monthlyRevenue) + '/mo';
             document.getElementById('idx-gs-rev').textContent = fmt(d.grottoSlice.monthlyRevenue) + '/mo';
             document.getElementById('idx-mb-rev').textContent = fmt(d.meetingBackgrounds.monthlyRevenue) + '/mo';
+            document.getElementById('idx-gtp-rev').textContent = fmt(d.grottoTemplatePackage.totalRevenue) + ' / ' + fmt(d.grottoTemplatePackage.revenueGoal) + ' goal';
         });
     </script>
 </body>

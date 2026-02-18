@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grotto Template Package Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; max-width: 900px; margin: 0 auto; padding: 60px 40px; line-height: 1.7; background-color: #fcfaf0; color: #363633; }
+        .back-link { font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; color: #80756b; text-decoration: none; border-bottom: 1px solid #c2b5a6; padding-bottom: 2px; transition: all 0.3s; }
+        .back-link:hover { color: #363633; border-color: #363633; }
+        .header { position: relative; margin: 40px 0 60px; padding-bottom: 32px; border-bottom: 1px solid #c2b5a6; }
+        .header .watermark { font-family: 'DM Serif Display', serif; font-size: 6rem; color: #e3decc; position: absolute; top: -30px; left: -10px; z-index: 0; line-height: 1; pointer-events: none; user-select: none; }
+        .header h1 { font-family: 'DM Serif Display', serif; font-size: 2.4rem; font-weight: 400; position: relative; z-index: 1; }
+        .header .subtitle { font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: #80756b; margin-top: 10px; position: relative; z-index: 1; }
+        .section-label { font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: #80756b; margin: 50px 0 24px; }
+        .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-bottom: 20px; }
+        .metric { border-top: 1px solid #c2b5a6; padding-top: 20px; }
+        .metric h3 { font-family: 'Inter', sans-serif; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: #80756b; margin-bottom: 8px; font-weight: 500; }
+        .metric p { font-family: 'DM Serif Display', serif; font-size: 2rem; color: #363633; }
+        .metric .detail { font-family: 'Inter', sans-serif; font-size: 0.8rem; color: #80756b; margin-top: 4px; }
+        .progress-wrap { margin: 24px 0; }
+        .progress-bar { background: #e3decc; height: 8px; border-radius: 4px; overflow: hidden; }
+        .progress-fill { background: #363633; height: 100%; border-radius: 4px; transition: width 0.6s ease; }
+        .progress-label { display: flex; justify-content: space-between; font-size: 0.75rem; color: #80756b; margin-top: 8px; }
+        h2 { font-family: 'DM Serif Display', serif; font-size: 1.4rem; font-weight: 400; margin-bottom: 16px; }
+        ul { list-style: none; padding: 0; }
+        ul li { padding: 12px 0; border-bottom: 1px solid #e3decc; font-size: 0.9rem; color: #80756b; }
+        ul li::before { content: "—"; margin-right: 12px; color: #c2b5a6; }
+        .channel-tag { display: inline-block; padding: 4px 12px; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 3px; margin: 4px 4px 4px 0; }
+        .channel-active { background: #363633; color: #fcfaf0; }
+        .channel-progress { background: #e3decc; color: #80756b; }
+        .channel-planned { background: transparent; border: 1px solid #c2b5a6; color: #c2b5a6; }
+    </style>
+</head>
+<body>
+    <a href="../index.html" class="back-link">← Back to Projects</a>
+
+    <div class="header">
+        <div class="watermark">Templates</div>
+        <h1 id="title">Grotto Template Package</h1>
+        <div class="subtitle">04. ——— Project Dashboard</div>
+    </div>
+
+    <div class="section-label">02. ——— Key Metrics</div>
+    <div class="metrics">
+        <div class="metric">
+            <h3>Total Revenue</h3>
+            <p id="total-revenue">...</p>
+        </div>
+        <div class="metric">
+            <h3>Revenue Goal</h3>
+            <p id="revenue-goal">...</p>
+        </div>
+        <div class="metric">
+            <h3>Stage</h3>
+            <p id="stage">...</p>
+        </div>
+    </div>
+
+    <div class="progress-wrap">
+        <div class="progress-bar"><div class="progress-fill" id="rev-fill" style="width:0%"></div></div>
+        <div class="progress-label"><span id="rev-pct">0%</span><span id="rev-target">$0 / $0</span></div>
+    </div>
+
+    <div class="section-label">03. ——— Marketing Channels</div>
+    <div id="channels"></div>
+
+    <div class="section-label">04. ——— To-Do</div>
+    <ul id="todo-list"><li>Loading...</li></ul>
+
+    <div class="section-label">05. ——— Biggest Blocker</div>
+    <ul><li id="blocker">Loading...</li></ul>
+
+    <script>
+        const fmt = n => '$' + n.toLocaleString('en-US');
+        fetch('../data/tracking.json').then(r=>r.json()).then(d=>{
+            const g = d.grottoTemplatePackage;
+            document.getElementById('total-revenue').textContent = fmt(g.totalRevenue);
+            document.getElementById('revenue-goal').textContent = fmt(g.revenueGoal);
+            document.getElementById('stage').textContent = g.stage;
+            
+            const pct = Math.round((g.totalRevenue / g.revenueGoal) * 100);
+            document.getElementById('rev-fill').style.width = pct + '%';
+            document.getElementById('rev-pct').textContent = pct + '% of goal';
+            document.getElementById('rev-target').textContent = fmt(g.totalRevenue) + ' / ' + fmt(g.revenueGoal);
+
+            // Channels
+            const ch = document.getElementById('channels');
+            let html = '<p style="font-size:0.8rem;color:#80756b;margin-bottom:12px;letter-spacing:0.1em;text-transform:uppercase;">Active</p>';
+            (g.activeChannels||[]).forEach(c => html += `<span class="channel-tag channel-active">${c}</span>`);
+            html += '<p style="font-size:0.8rem;color:#80756b;margin:16px 0 12px;letter-spacing:0.1em;text-transform:uppercase;">In Progress</p>';
+            (g.inProgressChannels||[]).forEach(c => html += `<span class="channel-tag channel-progress">${c}</span>`);
+            html += '<p style="font-size:0.8rem;color:#80756b;margin:16px 0 12px;letter-spacing:0.1em;text-transform:uppercase;">Planned</p>';
+            (g.plannedChannels||[]).forEach(c => html += `<span class="channel-tag channel-planned">${c}</span>`);
+            ch.innerHTML = html;
+
+            // Todo
+            const ul = document.getElementById('todo-list');
+            ul.innerHTML = (g.todoItems||[]).map(t => `<li>${t}</li>`).join('');
+
+            // Blocker
+            document.getElementById('blocker').textContent = g.biggestBlocker;
+        });
+    </script>
+</body>
+</html>

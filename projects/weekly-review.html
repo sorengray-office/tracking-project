@@ -56,6 +56,10 @@
             <h3>MeetingBackgrounds</h3>
             <p id="r-mb">Loading...</p>
         </div>
+        <div class="metric">
+            <h3>Template Package</h3>
+            <p id="r-gtp">Loading...</p>
+        </div>
     </div>
 
     <div class="total-row">
@@ -71,11 +75,12 @@
     <script>
         const fmt = n => '$' + n.toLocaleString('en-US');
         fetch('../data/tracking.json').then(r=>r.json()).then(d=>{
-            const gd = d.grottoDigital, gs = d.grottoSlice, mb = d.meetingBackgrounds;
+            const gd = d.grottoDigital, gs = d.grottoSlice, mb = d.meetingBackgrounds, gtp = d.grottoTemplatePackage;
             document.getElementById('r-gd').textContent = fmt(gd.monthlyRevenue);
             document.getElementById('r-gs').textContent = fmt(gs.monthlyRevenue);
             document.getElementById('r-mb').textContent = fmt(mb.monthlyRevenue);
-            const total = gd.monthlyRevenue + gs.monthlyRevenue + mb.monthlyRevenue;
+            document.getElementById('r-gtp').textContent = fmt(gtp.totalRevenue);
+            const total = gd.monthlyRevenue + gs.monthlyRevenue + mb.monthlyRevenue + gtp.totalRevenue;
             document.getElementById('r-total').textContent = fmt(total);
 
             // Progress vs Grotto Digital goal
