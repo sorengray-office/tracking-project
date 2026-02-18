@@ -10,6 +10,7 @@
     "avgClientValue": 21000,
     "pipelineLeads": 1,
     "biggestBottleneck": "Quality Lead Flow",
+    "weeklyFocuses": ["Client acquisition outreach", "Onboard new clients"],
     "acquisitionChannels": ["FB Ads", "Referrals"],
     "weeklyOutreachVolume": 0,
     "recentWins": [
@@ -32,6 +33,7 @@
     "stage": "Launched",
     "monthlyRevenue": 2666,
     "description": "Website where users can upload images, and use auto tools to convert and upload their design into a ready-to-send Klaviyo template",
+    "weeklyFocuses": ["Product development", "User testing"],
     "biggestBlocker": "Marketing",
     "nextSteps": [
       "Create a better tutorial video",
@@ -52,6 +54,7 @@
     "stage": "Pre-launch",
     "monthlyTraffic": 0,
     "monthlyRevenue": 0,
+    "weeklyFocuses": ["Launch preparation", "Landing page optimization"],
     "targetLaunchDate": "2026-02-18",
     "launchTasks": [
       "Place on directory TAAIFT",
@@ -89,6 +92,7 @@
     "stage": "Launched",
     "totalRevenue": 0,
     "revenueGoal": 15000,
+    "weeklyFocuses": ["Marketing push", "Distribution channels"],
     "description": "Pre-built email template package added to website, ready for marketing push",
     "biggestBlocker": "Marketing",
     "activeChannels": ["Pinterest"],

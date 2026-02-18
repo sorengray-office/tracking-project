@@ -15,7 +15,7 @@
         .header h1 { font-family: 'DM Serif Display', serif; font-size: 2.4rem; font-weight: 400; position: relative; z-index: 1; }
         .header .subtitle { font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: #80756b; margin-top: 10px; position: relative; z-index: 1; }
         .section-label { font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: #80756b; margin: 50px 0 24px; }
-        .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-bottom: 20px; }
+        .metrics { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; margin-bottom: 20px; }
         .metric { border-top: 1px solid #c2b5a6; padding-top: 20px; }
         .metric h3 { font-family: 'Inter', sans-serif; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: #80756b; margin-bottom: 8px; font-weight: 500; }
         .metric p { font-family: 'DM Serif Display', serif; font-size: 2rem; color: #363633; }
@@ -23,13 +23,12 @@
         .total-row { border-top: 2px solid #363633; padding: 20px 0; display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
         .total-row .label { font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: #80756b; font-weight: 600; }
         .total-row .value { font-family: 'DM Serif Display', serif; font-size: 2.2rem; color: #363633; }
-        .progress-bar-bg { background: #e3decc; border-radius: 4px; height: 12px; margin-top: 12px; overflow: hidden; }
-        .progress-bar-fill { background: #80756b; height: 100%; border-radius: 4px; transition: width 0.5s; }
-        .progress-label { font-size: 0.8rem; color: #80756b; margin-top: 6px; margin-bottom: 20px; }
         .revenue-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; border-top: 1px solid #c2b5a6; padding: 16px 0; }
         .revenue-row.revenue-header { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: #80756b; font-weight: 500; border-top: none; padding-bottom: 8px; }
         .revenue-row span { font-size: 0.9rem; color: #80756b; }
         .revenue-row span:first-child { color: #363633; font-weight: 500; }
+        .focuses-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; margin-bottom: 40px; }
+        .focus-card { border-top: 1px solid #c2b5a6; padding: 24px 0; }
         h2 { font-family: 'DM Serif Display', serif; font-size: 1.4rem; font-weight: 400; margin-bottom: 16px; }
     </style>
 </head>
@@ -39,7 +38,6 @@
     <div class="header">
         <div class="watermark">Review</div>
         <h1>Weekly Review</h1>
-        <div class="subtitle">01. ——— Project Dashboard</div>
     </div>
 
     <div class="section-label">02. ——— Revenue Breakdown</div>
@@ -67,9 +65,27 @@
         <span class="value" id="r-total">Loading...</span>
     </div>
 
-    <div id="progress-container"></div>
+    <div class="section-label">03. ——— Top Focuses</div>
+    <div class="focuses-grid" id="focuses-grid">
+        <div class="focus-card">
+            <h2>Grotto Digital</h2>
+            <ul id="focus-gd"><li>Loading...</li></ul>
+        </div>
+        <div class="focus-card">
+            <h2>Grotto Slice</h2>
+            <ul id="focus-gs"><li>Loading...</li></ul>
+        </div>
+        <div class="focus-card">
+            <h2>MeetingBackgrounds</h2>
+            <ul id="focus-mb"><li>Loading...</li></ul>
+        </div>
+        <div class="focus-card">
+            <h2>Template Package</h2>
+            <ul id="focus-gtp"><li>Loading...</li></ul>
+        </div>
+    </div>
 
-    <div class="section-label">03. ——— Revenue History</div>
+    <div class="section-label">04. ——— Revenue History</div>
     <div id="history-container"><p style="font-size:0.9rem;color:#80756b">Loading...</p></div>
 
     <script>
@@ -83,12 +99,21 @@
             const total = gd.monthlyRevenue + gs.monthlyRevenue + mb.monthlyRevenue + gtp.totalRevenue;
             document.getElementById('r-total').textContent = fmt(total);
 
-            // Progress vs Grotto Digital goal
-            const goal = gd.revenueGoal;
-            const pct = Math.min(100, Math.round(total / goal * 100));
-            document.getElementById('progress-container').innerHTML =
-                '<div class="progress-bar-bg"><div class="progress-bar-fill" style="width:'+pct+'%"></div></div>' +
-                '<div class="progress-label">'+fmt(total)+' total vs '+fmt(goal)+' Grotto Digital goal ('+pct+'%)</div>';
+            // Top Focuses
+            const focusMap = {
+                'focus-gd': gd.weeklyFocuses || [],
+                'focus-gs': gs.weeklyFocuses || [],
+                'focus-mb': mb.weeklyFocuses || [],
+                'focus-gtp': gtp.weeklyFocuses || []
+            };
+            Object.entries(focusMap).forEach(([id, items]) => {
+                const el = document.getElementById(id);
+                if (items.length) {
+                    el.innerHTML = items.map(i => '<li>' + i + '</li>').join('');
+                } else {
+                    el.innerHTML = '<li>No focuses set</li>';
+                }
+            });
 
             // History comparison
             const hc = document.getElementById('history-container');
