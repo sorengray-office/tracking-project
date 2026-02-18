@@ -4,7 +4,8 @@
     "name": "Grotto Digital",
     "monthlyRevenue": 10500,
     "revenueGoal": 30000,
-    "activeClients": 3500,
+    "activeClients": 6,
+    "clientBreakdown": "3 full-service, 3 small",
     "targetClients": 10,
     "avgClientValue": 21000,
     "pipelineLeads": 1,
@@ -21,7 +22,7 @@
       {
         "date": "2026-02-18",
         "monthlyRevenue": 10500,
-        "activeClients": 3500,
+        "activeClients": 6,
         "pipelineLeads": 1
       }
     ]

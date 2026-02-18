@@ -80,7 +80,8 @@
         fetch('../data/tracking.json').then(r=>r.json()).then(d=>{
             const g = d.grottoDigital;
             document.getElementById('m-revenue').textContent = fmt(g.monthlyRevenue);
-            document.getElementById('m-clients').textContent = g.activeClients.toLocaleString('en-US');
+            document.getElementById('m-clients').textContent = g.activeClients;
+            if (g.clientBreakdown) document.getElementById('m-clients').insertAdjacentHTML('afterend', '<div class="detail">' + g.clientBreakdown + '</div>');
             document.getElementById('m-leads').textContent = g.pipelineLeads;
             const pct = Math.min(100, Math.round(g.monthlyRevenue / g.revenueGoal * 100));
             document.getElementById('rev-bar').style.width = pct + '%';
