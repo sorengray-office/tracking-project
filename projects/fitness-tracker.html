@@ -19,10 +19,22 @@
         .metric { border-top: 1px solid #c2b5a6; padding-top: 20px; }
         .metric h3 { font-family: 'Inter', sans-serif; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: #80756b; margin-bottom: 8px; font-weight: 500; }
         .metric p { font-family: 'DM Serif Display', serif; font-size: 2rem; color: #363633; }
+        .metric .detail { font-family: 'Inter', sans-serif; font-size: 0.8rem; color: #80756b; margin-top: 4px; }
+        .info-row { border-top: 1px solid #c2b5a6; padding: 16px 0; display: flex; justify-content: space-between; }
+        .info-row .label { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: #80756b; font-weight: 500; }
+        .info-row .value { font-size: 0.95rem; color: #363633; font-weight: 500; }
         h2 { font-family: 'DM Serif Display', serif; font-size: 1.4rem; font-weight: 400; margin-bottom: 16px; }
-        ul { list-style: none; padding: 0; }
-        ul li { padding: 12px 0; border-bottom: 1px solid #e3decc; font-size: 0.9rem; color: #80756b; }
-        ul li::before { content: "—"; margin-right: 12px; color: #c2b5a6; }
+        .progress-bar-bg { background: #e3decc; border-radius: 4px; height: 12px; margin-top: 12px; overflow: hidden; }
+        .progress-bar-fill { background: #80756b; height: 100%; border-radius: 4px; transition: width 0.5s; }
+        .progress-label { font-size: 0.8rem; color: #80756b; margin-top: 6px; }
+        .calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 12px; }
+        .calendar .day-header { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: #80756b; text-align: center; padding: 6px 0; }
+        .calendar .day { text-align: center; padding: 8px 4px; font-size: 0.8rem; color: #80756b; border-radius: 4px; }
+        .calendar .day.empty { visibility: hidden; }
+        .calendar .day.gym { background: #80756b; color: #fcfaf0; font-weight: 600; }
+        .calendar .day.today { border: 1px solid #363633; }
+        .weight-history { margin-top: 12px; }
+        .weight-entry { border-top: 1px solid #e3decc; padding: 10px 0; display: flex; justify-content: space-between; font-size: 0.9rem; color: #80756b; }
     </style>
 </head>
 <body>
@@ -37,24 +49,76 @@
     <div class="section-label">02. ——— Key Metrics</div>
     <div class="metrics">
         <div class="metric">
+            <h3>Current Weight</h3>
+            <p id="m-weight">Loading...</p>
+            <div class="detail" id="m-goal-weight"></div>
+        </div>
+        <div class="metric">
             <h3>Workouts This Month</h3>
-            <p>18/24</p>
+            <p id="m-workouts">Loading...</p>
         </div>
         <div class="metric">
-            <h3>Meal Preps</h3>
-            <p>6/8</p>
-        </div>
-        <div class="metric">
-            <h3>Weight Progress</h3>
-            <p>-5 lbs</p>
+            <h3>Workout Split</h3>
+            <p id="m-split" style="font-size:1.3rem">Loading...</p>
         </div>
     </div>
 
-    <div class="section-label">03. ——— Recent Progress</div>
-    <ul>
-        <li>Completed 18 workouts in February</li>
-        <li>Maintained meal prep schedule</li>
-        <li>Lost 5 pounds since January</li>
-    </ul>
+    <div id="weight-progress"></div>
+
+    <div class="info-row"><span class="label">Next Meal Prep Day</span><span class="value" id="d-meal">Loading...</span></div>
+
+    <div class="section-label">03. ——— Gym Calendar</div>
+    <div id="calendar-container"></div>
+
+    <div class="section-label">04. ——— Weight History</div>
+    <div class="weight-history" id="weight-history">Loading...</div>
+
+    <script>
+        fetch('../data/tracking.json').then(r=>r.json()).then(d=>{
+            const f = d.fitness;
+            document.getElementById('m-weight').textContent = f.currentWeight + ' lbs';
+            document.getElementById('m-goal-weight').textContent = 'Goal: ' + f.goalWeight + ' lbs (' + f.goalNote + ')';
+            document.getElementById('m-split').textContent = f.workoutSplit;
+            document.getElementById('d-meal').textContent = f.nextMealPrepDay;
+
+            // Current month workouts
+            const now = new Date();
+            const monthKey = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+            const gymThisMonth = f.gymDays[monthKey] || [];
+            document.getElementById('m-workouts').textContent = gymThisMonth.length;
+
+            // Weight progress bar
+            const pct = Math.min(100, Math.round((f.currentWeight / f.goalWeight) * 100));
+            document.getElementById('weight-progress').innerHTML =
+                '<div class="progress-bar-bg"><div class="progress-bar-fill" style="width:'+pct+'%"></div></div>' +
+                '<div class="progress-label">' + f.currentWeight + ' / ' + f.goalWeight + ' lbs (' + pct + '%)</div>';
+
+            // Calendar
+            const year = now.getFullYear(), month = now.getMonth();
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month+1, 0).getDate();
+            const today = now.getDate();
+            const gymSet = new Set(gymThisMonth);
+            let html = '<div class="calendar">';
+            ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d => html += '<div class="day-header">'+d+'</div>');
+            for(let i=0;i<firstDay;i++) html += '<div class="day empty"></div>';
+            for(let d=1;d<=daysInMonth;d++){
+                const dateStr = year+'-'+String(month+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+                const cls = ['day'];
+                if(gymSet.has(dateStr)) cls.push('gym');
+                if(d===today) cls.push('today');
+                html += '<div class="'+cls.join(' ')+'">'+d+'</div>';
+            }
+            html += '</div>';
+            document.getElementById('calendar-container').innerHTML = html;
+
+            // Weight history
+            const wh = document.getElementById('weight-history');
+            wh.innerHTML = '';
+            f.weightHistory.forEach(e => {
+                wh.innerHTML += '<div class="weight-entry"><span>'+e.date+'</span><span>'+e.weight+' lbs</span></div>';
+            });
+        });
+    </script>
 </body>
 </html>

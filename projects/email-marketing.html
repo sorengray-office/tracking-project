@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email Marketing Agency Dashboard</title>
+    <title>Grotto Digital Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -19,18 +19,25 @@
         .metric { border-top: 1px solid #c2b5a6; padding-top: 20px; }
         .metric h3 { font-family: 'Inter', sans-serif; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: #80756b; margin-bottom: 8px; font-weight: 500; }
         .metric p { font-family: 'DM Serif Display', serif; font-size: 2rem; color: #363633; }
+        .metric .detail { font-family: 'Inter', sans-serif; font-size: 0.8rem; color: #80756b; margin-top: 4px; }
         h2 { font-family: 'DM Serif Display', serif; font-size: 1.4rem; font-weight: 400; margin-bottom: 16px; }
         ul { list-style: none; padding: 0; }
         ul li { padding: 12px 0; border-bottom: 1px solid #e3decc; font-size: 0.9rem; color: #80756b; }
         ul li::before { content: "—"; margin-right: 12px; color: #c2b5a6; }
+        .progress-bar-bg { background: #e3decc; border-radius: 4px; height: 12px; margin-top: 12px; overflow: hidden; }
+        .progress-bar-fill { background: #80756b; height: 100%; border-radius: 4px; transition: width 0.5s; }
+        .progress-label { font-size: 0.8rem; color: #80756b; margin-top: 6px; }
+        .info-row { border-top: 1px solid #c2b5a6; padding: 16px 0; display: flex; justify-content: space-between; }
+        .info-row .label { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: #80756b; font-weight: 500; }
+        .info-row .value { font-size: 0.95rem; color: #363633; font-weight: 500; }
     </style>
 </head>
 <body>
     <a href="../index.html" class="back-link">← Back to Projects</a>
 
     <div class="header">
-        <div class="watermark">Email</div>
-        <h1>Email Marketing Agency</h1>
+        <div class="watermark">Grotto</div>
+        <h1>Grotto Digital</h1>
         <div class="subtitle">01. ——— Project Dashboard</div>
     </div>
 
@@ -38,23 +45,60 @@
     <div class="metrics">
         <div class="metric">
             <h3>Monthly Revenue</h3>
-            <p>$42,500</p>
+            <p id="m-revenue">Loading...</p>
         </div>
         <div class="metric">
             <h3>Active Clients</h3>
-            <p>17</p>
+            <p id="m-clients">Loading...</p>
         </div>
         <div class="metric">
-            <h3>Email Conversion Rate</h3>
-            <p>4.2%</p>
+            <h3>Pipeline Leads</h3>
+            <p id="m-leads">Loading...</p>
         </div>
     </div>
 
-    <div class="section-label">03. ——— Recent Achievements</div>
-    <ul>
-        <li>Onboarded 3 new enterprise clients in January</li>
-        <li>Developed new A/B testing strategy increasing conversion by 1.5%</li>
-        <li>Expanded team with 2 new marketing specialists</li>
-    </ul>
+    <div id="progress-section">
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="rev-bar" style="width:0%"></div></div>
+        <div class="progress-label" id="rev-label">Loading...</div>
+    </div>
+
+    <div class="section-label">03. ——— Details</div>
+    <div id="details">
+        <div class="info-row"><span class="label">Revenue Goal</span><span class="value" id="d-goal">Loading...</span></div>
+        <div class="info-row"><span class="label">Target Clients</span><span class="value" id="d-target">Loading...</span></div>
+        <div class="info-row"><span class="label">Avg Client Value</span><span class="value" id="d-acv">Loading...</span></div>
+        <div class="info-row"><span class="label">Biggest Bottleneck</span><span class="value" id="d-bottleneck">Loading...</span></div>
+        <div class="info-row"><span class="label">Weekly Outreach Volume</span><span class="value" id="d-outreach">Loading...</span></div>
+        <div class="info-row"><span class="label">Acquisition Channels</span><span class="value" id="d-channels">Loading...</span></div>
+    </div>
+
+    <div class="section-label">04. ——— Recent Wins</div>
+    <ul id="wins-list"><li>Loading...</li></ul>
+
+    <script>
+        const fmt = n => '$' + n.toLocaleString('en-US');
+        fetch('../data/tracking.json').then(r=>r.json()).then(d=>{
+            const g = d.grottoDigital;
+            document.getElementById('m-revenue').textContent = fmt(g.monthlyRevenue);
+            document.getElementById('m-clients').textContent = g.activeClients.toLocaleString('en-US');
+            document.getElementById('m-leads').textContent = g.pipelineLeads;
+            const pct = Math.min(100, Math.round(g.monthlyRevenue / g.revenueGoal * 100));
+            document.getElementById('rev-bar').style.width = pct + '%';
+            document.getElementById('rev-label').textContent = fmt(g.monthlyRevenue) + ' of ' + fmt(g.revenueGoal) + ' goal (' + pct + '%)';
+            document.getElementById('d-goal').textContent = fmt(g.revenueGoal);
+            document.getElementById('d-target').textContent = g.targetClients;
+            document.getElementById('d-acv').textContent = fmt(g.avgClientValue);
+            document.getElementById('d-bottleneck').textContent = g.biggestBottleneck;
+            document.getElementById('d-outreach').textContent = g.weeklyOutreachVolume;
+            document.getElementById('d-channels').textContent = g.acquisitionChannels.join(', ');
+            const ul = document.getElementById('wins-list');
+            ul.innerHTML = '';
+            g.recentWins.forEach(w => {
+                const li = document.createElement('li');
+                li.textContent = w.text + ' (' + w.date + ')';
+                ul.appendChild(li);
+            });
+        });
+    </script>
 </body>
 </html>

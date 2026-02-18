@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Figma → Klaviyo Plugin Dashboard</title>
+    <title>Grotto Slice Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -15,11 +15,11 @@
         .header h1 { font-family: 'DM Serif Display', serif; font-size: 2.4rem; font-weight: 400; position: relative; z-index: 1; }
         .header .subtitle { font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: #80756b; margin-top: 10px; position: relative; z-index: 1; }
         .section-label { font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: #80756b; margin: 50px 0 24px; }
-        .dev-status { border-top: 1px solid #c2b5a6; padding-top: 24px; margin-bottom: 20px; }
-        .dev-status h3 { font-family: 'DM Serif Display', serif; font-size: 1.3rem; font-weight: 400; margin-bottom: 16px; }
-        .dev-status p { font-size: 0.9rem; color: #80756b; margin-bottom: 8px; }
-        .dev-status strong { color: #363633; font-weight: 500; }
+        .info-row { border-top: 1px solid #c2b5a6; padding: 16px 0; display: flex; justify-content: space-between; }
+        .info-row .label { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: #80756b; font-weight: 500; }
+        .info-row .value { font-size: 0.95rem; color: #363633; font-weight: 500; }
         .highlight { font-family: 'DM Serif Display', serif; font-size: 2rem; color: #363633; }
+        .desc { font-size: 0.95rem; color: #80756b; margin-bottom: 24px; line-height: 1.8; }
         h2 { font-family: 'DM Serif Display', serif; font-size: 1.4rem; font-weight: 400; margin-bottom: 16px; }
         ul { list-style: none; padding: 0; }
         ul li { padding: 12px 0; border-bottom: 1px solid #e3decc; font-size: 0.9rem; color: #80756b; }
@@ -30,23 +30,39 @@
     <a href="../index.html" class="back-link">← Back to Projects</a>
 
     <div class="header">
-        <div class="watermark">Plugin</div>
-        <h1>Figma → Klaviyo Plugin</h1>
+        <div class="watermark">Slice</div>
+        <h1>Grotto Slice</h1>
         <div class="subtitle">01. ——— Project Dashboard</div>
     </div>
 
-    <div class="section-label">02. ——— Development Status</div>
-    <div class="dev-status">
-        <p><strong>Current Phase:</strong> Beta Testing</p>
-        <p><strong>Beta Testers:</strong> <span class="highlight">42</span> designers and marketers</p>
-        <p><strong>Feedback Score:</strong> <span class="highlight">8.7</span>/10</p>
+    <p class="desc" id="desc">Loading...</p>
+
+    <div class="section-label">02. ——— Status</div>
+    <div id="details">
+        <div class="info-row"><span class="label">Stage</span><span class="value" id="d-stage">Loading...</span></div>
+        <div class="info-row"><span class="label">Monthly Revenue</span><span class="value" id="d-rev">Loading...</span></div>
+        <div class="info-row"><span class="label">Biggest Blocker</span><span class="value" id="d-blocker">Loading...</span></div>
     </div>
 
-    <div class="section-label">03. ——— Upcoming Milestones</div>
-    <ul>
-        <li>Complete beta testing by end of Q1</li>
-        <li>Develop Figma marketplace listing</li>
-        <li>Finalize pricing strategy</li>
-    </ul>
+    <div class="section-label">03. ——— Next Steps</div>
+    <ul id="steps-list"><li>Loading...</li></ul>
+
+    <script>
+        const fmt = n => '$' + n.toLocaleString('en-US');
+        fetch('../data/tracking.json').then(r=>r.json()).then(d=>{
+            const g = d.grottoSlice;
+            document.getElementById('desc').textContent = g.description;
+            document.getElementById('d-stage').textContent = g.stage;
+            document.getElementById('d-rev').textContent = fmt(g.monthlyRevenue);
+            document.getElementById('d-blocker').textContent = g.biggestBlocker;
+            const ul = document.getElementById('steps-list');
+            ul.innerHTML = '';
+            g.nextSteps.forEach(s => {
+                const li = document.createElement('li');
+                li.textContent = s;
+                ul.appendChild(li);
+            });
+        });
+    </script>
 </body>
 </html>

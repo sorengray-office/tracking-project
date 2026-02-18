@@ -23,6 +23,9 @@
         ul { list-style: none; padding: 0; }
         ul li { padding: 12px 0; border-bottom: 1px solid #e3decc; font-size: 0.9rem; color: #80756b; }
         ul li::before { content: "—"; margin-right: 12px; color: #c2b5a6; }
+        .info-row { border-top: 1px solid #c2b5a6; padding: 16px 0; display: flex; justify-content: space-between; }
+        .info-row .label { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: #80756b; font-weight: 500; }
+        .info-row .value { font-size: 0.95rem; color: #363633; font-weight: 500; }
     </style>
 </head>
 <body>
@@ -37,24 +40,40 @@
     <div class="section-label">02. ——— Key Metrics</div>
     <div class="metrics">
         <div class="metric">
-            <h3>Monthly Users</h3>
-            <p>3,245</p>
+            <h3>Stage</h3>
+            <p id="m-stage">Loading...</p>
         </div>
         <div class="metric">
-            <h3>Background Templates</h3>
-            <p>127</p>
+            <h3>Monthly Traffic</h3>
+            <p id="m-traffic">Loading...</p>
         </div>
         <div class="metric">
             <h3>Monthly Revenue</h3>
-            <p>$4,500</p>
+            <p id="m-revenue">Loading...</p>
         </div>
     </div>
 
-    <div class="section-label">03. ——— Recent Updates</div>
-    <ul>
-        <li>Added 15 new professional background templates</li>
-        <li>Launched custom background designer tool</li>
-        <li>Integrated with Zoom and Teams APIs</li>
-    </ul>
+    <div class="info-row"><span class="label">Target Launch Date</span><span class="value" id="d-launch">Loading...</span></div>
+
+    <div class="section-label">03. ——— Launch Tasks</div>
+    <ul id="tasks-list"><li>Loading...</li></ul>
+
+    <script>
+        const fmt = n => '$' + n.toLocaleString('en-US');
+        fetch('../data/tracking.json').then(r=>r.json()).then(d=>{
+            const m = d.meetingBackgrounds;
+            document.getElementById('m-stage').textContent = m.stage;
+            document.getElementById('m-traffic').textContent = m.monthlyTraffic.toLocaleString('en-US');
+            document.getElementById('m-revenue').textContent = fmt(m.monthlyRevenue);
+            document.getElementById('d-launch').textContent = m.targetLaunchDate;
+            const ul = document.getElementById('tasks-list');
+            ul.innerHTML = '';
+            m.launchTasks.forEach(t => {
+                const li = document.createElement('li');
+                li.textContent = t;
+                ul.appendChild(li);
+            });
+        });
+    </script>
 </body>
 </html>

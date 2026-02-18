@@ -20,14 +20,17 @@
         .metric h3 { font-family: 'Inter', sans-serif; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: #80756b; margin-bottom: 8px; font-weight: 500; }
         .metric p { font-family: 'DM Serif Display', serif; font-size: 2rem; color: #363633; }
         .metric .detail { font-family: 'Inter', sans-serif; font-size: 0.8rem; color: #80756b; margin-top: 4px; }
-        h2 { font-family: 'DM Serif Display', serif; font-size: 1.4rem; font-weight: 400; margin-bottom: 16px; }
-        ul { list-style: none; padding: 0; }
-        ul li { padding: 12px 0; border-bottom: 1px solid #e3decc; font-size: 0.9rem; color: #80756b; }
-        ul li::before { content: "—"; margin-right: 12px; color: #c2b5a6; }
-        .revenue-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; border-top: 1px solid #c2b5a6; padding: 16px 0; }
+        .total-row { border-top: 2px solid #363633; padding: 20px 0; display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
+        .total-row .label { font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: #80756b; font-weight: 600; }
+        .total-row .value { font-family: 'DM Serif Display', serif; font-size: 2.2rem; color: #363633; }
+        .progress-bar-bg { background: #e3decc; border-radius: 4px; height: 12px; margin-top: 12px; overflow: hidden; }
+        .progress-bar-fill { background: #80756b; height: 100%; border-radius: 4px; transition: width 0.5s; }
+        .progress-label { font-size: 0.8rem; color: #80756b; margin-top: 6px; margin-bottom: 20px; }
+        .revenue-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; border-top: 1px solid #c2b5a6; padding: 16px 0; }
         .revenue-row.revenue-header { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: #80756b; font-weight: 500; border-top: none; padding-bottom: 8px; }
         .revenue-row span { font-size: 0.9rem; color: #80756b; }
         .revenue-row span:first-child { color: #363633; font-weight: 500; }
+        h2 { font-family: 'DM Serif Display', serif; font-size: 1.4rem; font-weight: 400; margin-bottom: 16px; }
     </style>
 </head>
 <body>
@@ -36,44 +39,74 @@
     <div class="header">
         <div class="watermark">Review</div>
         <h1>Weekly Review</h1>
-        <div class="subtitle">01. Project Dashboard</div>
+        <div class="subtitle">01. ——— Project Dashboard</div>
     </div>
 
-    <div class="section-label">02. Revenue Tracking</div>
-    <div class="revenue-row revenue-header">
-        <span>Project</span>
-        <span>This Week</span>
-        <span>Last Week</span>
-    </div>
-    <div class="revenue-row">
-        <span>Email Marketing Agency</span>
-        <span>$0</span>
-        <span>$0</span>
-    </div>
-    <div class="revenue-row">
-        <span>Figma → Klaviyo Plugin</span>
-        <span>$0</span>
-        <span>$0</span>
-    </div>
-    <div class="revenue-row">
-        <span>MeetingBackgrounds.com</span>
-        <span>$0</span>
-        <span>$0</span>
+    <div class="section-label">02. ——— Revenue Breakdown</div>
+    <div class="metrics" id="rev-metrics">
+        <div class="metric">
+            <h3>Grotto Digital</h3>
+            <p id="r-gd">Loading...</p>
+        </div>
+        <div class="metric">
+            <h3>Grotto Slice</h3>
+            <p id="r-gs">Loading...</p>
+        </div>
+        <div class="metric">
+            <h3>MeetingBackgrounds</h3>
+            <p id="r-mb">Loading...</p>
+        </div>
     </div>
 
-    <div class="section-label">03. Key Milestones &amp; Wins</div>
-    <ul>
-        <li>No data yet</li>
-    </ul>
+    <div class="total-row">
+        <span class="label">Total Monthly Revenue</span>
+        <span class="value" id="r-total">Loading...</span>
+    </div>
 
-    <div class="section-label">04. Blockers</div>
-    <ul>
-        <li>No data yet</li>
-    </ul>
+    <div id="progress-container"></div>
 
-    <div class="section-label">05. Next Week's Priorities</div>
-    <ul>
-        <li>No data yet</li>
-    </ul>
+    <div class="section-label">03. ——— Revenue History</div>
+    <div id="history-container"><p style="font-size:0.9rem;color:#80756b">Loading...</p></div>
+
+    <script>
+        const fmt = n => '$' + n.toLocaleString('en-US');
+        fetch('../data/tracking.json').then(r=>r.json()).then(d=>{
+            const gd = d.grottoDigital, gs = d.grottoSlice, mb = d.meetingBackgrounds;
+            document.getElementById('r-gd').textContent = fmt(gd.monthlyRevenue);
+            document.getElementById('r-gs').textContent = fmt(gs.monthlyRevenue);
+            document.getElementById('r-mb').textContent = fmt(mb.monthlyRevenue);
+            const total = gd.monthlyRevenue + gs.monthlyRevenue + mb.monthlyRevenue;
+            document.getElementById('r-total').textContent = fmt(total);
+
+            // Progress vs Grotto Digital goal
+            const goal = gd.revenueGoal;
+            const pct = Math.min(100, Math.round(total / goal * 100));
+            document.getElementById('progress-container').innerHTML =
+                '<div class="progress-bar-bg"><div class="progress-bar-fill" style="width:'+pct+'%"></div></div>' +
+                '<div class="progress-label">'+fmt(total)+' total vs '+fmt(goal)+' Grotto Digital goal ('+pct+'%)</div>';
+
+            // History comparison
+            const hc = document.getElementById('history-container');
+            let html = '<div class="revenue-row revenue-header"><span>Date</span><span>Revenue</span></div>';
+            // Combine histories
+            const dates = new Set();
+            const revByDate = {};
+            [gd, gs, mb].forEach(proj => {
+                (proj.history||[]).forEach(h => {
+                    dates.add(h.date);
+                    revByDate[h.date] = (revByDate[h.date]||0) + (h.monthlyRevenue||0);
+                });
+            });
+            const sorted = [...dates].sort().reverse();
+            if(sorted.length){
+                sorted.forEach(date => {
+                    html += '<div class="revenue-row"><span>'+date+'</span><span>'+fmt(revByDate[date])+'</span></div>';
+                });
+            } else {
+                html += '<div class="revenue-row"><span>No history yet</span><span>—</span></div>';
+            }
+            hc.innerHTML = html;
+        });
+    </script>
 </body>
 </html>

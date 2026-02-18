@@ -1,0 +1,100 @@
+{
+  "lastUpdated": "2026-02-18",
+  "grottoDigital": {
+    "name": "Grotto Digital",
+    "monthlyRevenue": 10500,
+    "revenueGoal": 30000,
+    "activeClients": 3500,
+    "targetClients": 10,
+    "avgClientValue": 21000,
+    "pipelineLeads": 1,
+    "biggestBottleneck": "Quality Lead Flow",
+    "acquisitionChannels": ["FB Ads", "Referrals"],
+    "weeklyOutreachVolume": 0,
+    "recentWins": [
+      {
+        "date": "2026-02-18",
+        "text": "Signed a new client - MDPlastic Surgery ($3.5k first month, $1.5k after)"
+      }
+    ],
+    "history": [
+      {
+        "date": "2026-02-18",
+        "monthlyRevenue": 10500,
+        "activeClients": 3500,
+        "pipelineLeads": 1
+      }
+    ]
+  },
+  "grottoSlice": {
+    "name": "Grotto Slice (Figma → Klaviyo Plugin)",
+    "stage": "Launched",
+    "monthlyRevenue": 2666,
+    "description": "Website where users can upload images, and use auto tools to convert and upload their design into a ready-to-send Klaviyo template",
+    "biggestBlocker": "Marketing",
+    "nextSteps": [
+      "Create a better tutorial video",
+      "Improve tracking analytics",
+      "Improve first time user flow",
+      "Setup welcome series"
+    ],
+    "history": [
+      {
+        "date": "2026-02-18",
+        "monthlyRevenue": 2666,
+        "stage": "Launched"
+      }
+    ]
+  },
+  "meetingBackgrounds": {
+    "name": "MeetingBackgrounds.com",
+    "stage": "Pre-launch",
+    "monthlyTraffic": 0,
+    "monthlyRevenue": 0,
+    "targetLaunchDate": "2026-02-18",
+    "launchTasks": [
+      "Place on directory TAAIFT",
+      "Setup Google Ads",
+      "Post on Twitter"
+    ],
+    "history": [
+      {
+        "date": "2026-02-18",
+        "monthlyTraffic": 0,
+        "monthlyRevenue": 0,
+        "stage": "Pre-launch"
+      }
+    ]
+  },
+  "fitness": {
+    "workoutSplit": "2 days on, 1 day off",
+    "nextMealPrepDay": "2026-02-19",
+    "currentWeight": 169,
+    "goalWeight": 185,
+    "goalNote": "Lean bulk",
+    "gymDays": {
+      "2026-01": ["2026-01-05", "2026-01-06", "2026-01-09", "2026-01-10", "2026-01-13", "2026-01-20", "2026-01-21", "2026-01-23", "2026-01-24", "2026-01-26"],
+      "2026-02": ["2026-02-03", "2026-02-04", "2026-02-06", "2026-02-09", "2026-02-16"]
+    },
+    "weightHistory": [
+      {
+        "date": "2026-02-18",
+        "weight": 169
+      }
+    ]
+  },
+  "relationships": {
+    "familyCheckInFrequency": "Weekly checkbox - checked in with every family member",
+    "friendHangoutsPerWeekGoal": 2,
+    "datingGoal": "Find a long term partner this year",
+    "datesPerWeekGoal": 3,
+    "weeklyLog": [
+      {
+        "weekOf": "2026-02-17",
+        "familyCheckIn": false,
+        "friendHangouts": 0,
+        "dates": 0
+      }
+    ]
+  }
+}

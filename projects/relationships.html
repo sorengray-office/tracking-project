@@ -20,10 +20,13 @@
         .metric h3 { font-family: 'Inter', sans-serif; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: #80756b; margin-bottom: 8px; font-weight: 500; }
         .metric p { font-family: 'DM Serif Display', serif; font-size: 2rem; color: #363633; }
         .metric .detail { font-family: 'Inter', sans-serif; font-size: 0.8rem; color: #80756b; margin-top: 4px; }
+        .info-row { border-top: 1px solid #c2b5a6; padding: 16px 0; display: flex; justify-content: space-between; align-items: center; }
+        .info-row .label { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: #80756b; font-weight: 500; }
+        .info-row .value { font-size: 0.95rem; color: #363633; font-weight: 500; }
         h2 { font-family: 'DM Serif Display', serif; font-size: 1.4rem; font-weight: 400; margin-bottom: 16px; }
-        ul { list-style: none; padding: 0; }
-        ul li { padding: 12px 0; border-bottom: 1px solid #e3decc; font-size: 0.9rem; color: #80756b; }
-        ul li::before { content: "—"; margin-right: 12px; color: #c2b5a6; }
+        .checkbox { display: inline-block; width: 20px; height: 20px; border: 2px solid #c2b5a6; border-radius: 3px; vertical-align: middle; margin-right: 8px; position: relative; }
+        .checkbox.checked { background: #80756b; border-color: #80756b; }
+        .checkbox.checked::after { content: '✓'; color: #fcfaf0; position: absolute; top: -2px; left: 3px; font-size: 14px; }
     </style>
 </head>
 <body>
@@ -32,36 +35,56 @@
     <div class="header">
         <div class="watermark">Connect</div>
         <h1>Relationships</h1>
-        <div class="subtitle">01. Project Dashboard</div>
+        <div class="subtitle">01. ——— Project Dashboard</div>
     </div>
 
-    <div class="section-label">02. Key Metrics</div>
-    <div class="metrics">
+    <div class="section-label">02. ——— Goals</div>
+    <div id="goals">
+        <div class="info-row"><span class="label">Dating Goal</span><span class="value" id="g-dating">Loading...</span></div>
+        <div class="info-row"><span class="label">Friend Hangouts / Week</span><span class="value" id="g-friends">Loading...</span></div>
+        <div class="info-row"><span class="label">Dates / Week</span><span class="value" id="g-dates">Loading...</span></div>
+        <div class="info-row"><span class="label">Family Check-In</span><span class="value" id="g-family">Loading...</span></div>
+    </div>
+
+    <div class="section-label">03. ——— This Week</div>
+    <div class="metrics" id="weekly-metrics">
         <div class="metric">
-            <h3>Friend Hangouts This Week</h3>
-            <p>0</p>
-            <div class="detail">No data yet</div>
+            <h3>Friend Hangouts</h3>
+            <p id="w-friends">Loading...</p>
+            <div class="detail" id="w-friends-goal"></div>
         </div>
         <div class="metric">
-            <h3>Dates This Week</h3>
-            <p>0</p>
-            <div class="detail">No data yet</div>
+            <h3>Dates</h3>
+            <p id="w-dates">Loading...</p>
+            <div class="detail" id="w-dates-goal"></div>
         </div>
         <div class="metric">
-            <h3>Weekly Social Time</h3>
-            <p>0 hrs</p>
-            <div class="detail">No data yet</div>
+            <h3>Family Check-In</h3>
+            <p id="w-family">Loading...</p>
         </div>
     </div>
 
-    <div class="section-label">03. Family Check-Ins</div>
-    <ul>
-        <li>No data yet</li>
-    </ul>
+    <div class="info-row"><span class="label">Week Of</span><span class="value" id="w-weekof">Loading...</span></div>
 
-    <div class="section-label">04. Recent Activity</div>
-    <ul>
-        <li>No data yet</li>
-    </ul>
+    <script>
+        fetch('../data/tracking.json').then(r=>r.json()).then(d=>{
+            const r = d.relationships;
+            document.getElementById('g-dating').textContent = r.datingGoal;
+            document.getElementById('g-friends').textContent = r.friendHangoutsPerWeekGoal + ' goal';
+            document.getElementById('g-dates').textContent = r.datesPerWeekGoal + ' goal';
+            document.getElementById('g-family').textContent = r.familyCheckInFrequency;
+
+            const latest = r.weeklyLog[r.weeklyLog.length - 1];
+            if(latest){
+                document.getElementById('w-friends').textContent = latest.friendHangouts;
+                document.getElementById('w-friends-goal').textContent = 'of ' + r.friendHangoutsPerWeekGoal + ' goal';
+                document.getElementById('w-dates').textContent = latest.dates;
+                document.getElementById('w-dates-goal').textContent = 'of ' + r.datesPerWeekGoal + ' goal';
+                const chk = latest.familyCheckIn;
+                document.getElementById('w-family').innerHTML = '<span class="checkbox '+(chk?'checked':'')+'"></span>' + (chk ? 'Done' : 'Not yet');
+                document.getElementById('w-weekof').textContent = latest.weekOf;
+            }
+        });
+    </script>
 </body>
 </html>

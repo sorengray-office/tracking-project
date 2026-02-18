@@ -107,6 +107,12 @@
         .project-card a:hover {
             border-bottom-color: #363633;
         }
+        .card-revenue {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.3rem;
+            color: #363633;
+            margin-bottom: 16px;
+        }
     </style>
 </head>
 <body>
@@ -117,18 +123,20 @@
 
     <div class="section-label">01. Project Overview</div>
     
-    <div class="projects-grid">
+    <div class="projects-grid" id="grid">
         <div class="project-card">
             <div class="card-number">01</div>
-            <h2>Email Marketing Agency</h2>
+            <h2>Grotto Digital</h2>
             <p>Growing digital marketing solutions focused on email campaigns and conversion optimization.</p>
+            <div class="card-revenue" id="idx-gd-rev">Loading...</div>
             <a href="projects/email-marketing.html">View Dashboard →</a>
         </div>
         
         <div class="project-card">
             <div class="card-number">02</div>
-            <h2>Figma → Klaviyo Plugin</h2>
-            <p>Innovative plugin bridging design and marketing automation platforms.</p>
+            <h2>Grotto Slice</h2>
+            <p>Website where users upload images and convert designs into ready-to-send Klaviyo templates.</p>
+            <div class="card-revenue" id="idx-gs-rev">Loading...</div>
             <a href="projects/figma-klaviyo-plugin.html">View Dashboard →</a>
         </div>
         
@@ -136,6 +144,7 @@
             <div class="card-number">03</div>
             <h2>MeetingBackgrounds.com</h2>
             <p>Web application for professional and creative meeting backgrounds.</p>
+            <div class="card-revenue" id="idx-mb-rev">Loading...</div>
             <a href="projects/meeting-backgrounds.html">View Dashboard →</a>
         </div>
         
@@ -160,5 +169,14 @@
             <a href="projects/weekly-review.html">View Dashboard →</a>
         </div>
     </div>
+
+    <script>
+        const fmt = n => '$' + n.toLocaleString('en-US');
+        fetch('data/tracking.json').then(r=>r.json()).then(d=>{
+            document.getElementById('idx-gd-rev').textContent = fmt(d.grottoDigital.monthlyRevenue) + '/mo';
+            document.getElementById('idx-gs-rev').textContent = fmt(d.grottoSlice.monthlyRevenue) + '/mo';
+            document.getElementById('idx-mb-rev').textContent = fmt(d.meetingBackgrounds.monthlyRevenue) + '/mo';
+        });
+    </script>
 </body>
 </html>
