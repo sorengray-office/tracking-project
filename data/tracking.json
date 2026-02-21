@@ -1,25 +1,35 @@
 {
-  "lastUpdated": "2026-02-18",
+  "lastUpdated": "2026-02-21",
   "grottoDigital": {
     "name": "Grotto Digital",
-    "monthlyRevenue": 10500,
+    "monthlyRevenue": 14000,
     "revenueGoal": 30000,
-    "activeClients": 6,
-    "clientBreakdown": "3 full-service, 3 small",
+    "activeClients": 7,
+    "clientBreakdown": "3 full-service, 4 small",
     "targetClients": 10,
-    "avgClientValue": 21000,
-    "pipelineLeads": 1,
+    "avgClientValue": 24000,
+    "pipelineLeads": 0,
     "biggestBottleneck": "Quality Lead Flow",
     "weeklyFocuses": ["Client acquisition outreach", "Onboard new clients"],
     "acquisitionChannels": ["FB Ads", "Referrals"],
     "weeklyOutreachVolume": 0,
     "recentWins": [
       {
+        "date": "2026-02-21",
+        "text": "Signed new client - 1x at $3,500/mo"
+      },
+      {
         "date": "2026-02-18",
         "text": "Signed a new client - MDPlastic Surgery ($3.5k first month, $1.5k after)"
       }
     ],
     "history": [
+      {
+        "date": "2026-02-21",
+        "monthlyRevenue": 14000,
+        "activeClients": 7,
+        "pipelineLeads": 0
+      },
       {
         "date": "2026-02-18",
         "monthlyRevenue": 10500,
