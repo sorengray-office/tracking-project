@@ -67,7 +67,12 @@
     <div class="info-row"><span class="label">Next Meal Prep Day</span><span class="value" id="d-meal">Loading...</span></div>
 
     <div class="section-label">03. Gym Calendar</div>
-    <div id="calendar-container"></div>
+    <div id="calendar-month-label" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <span id="cal-prev" style="cursor:pointer;font-size:1.2rem;color:#80756b;user-select:none;padding:4px 12px;">←</span>
+        <span id="cal-month-name" style="font-family:'DM Serif Display',serif;font-size:1.2rem;"></span>
+        <span id="cal-next" style="cursor:pointer;font-size:1.2rem;color:#80756b;user-select:none;padding:4px 12px;">→</span>
+    </div>
+    <div id="calendar-container" style="touch-action:pan-y;"></div>
 
     <div class="section-label">04. Weight History</div>
     <div class="weight-history" id="weight-history">Loading...</div>
@@ -92,24 +97,58 @@
                 '<div class="progress-bar-bg"><div class="progress-bar-fill" style="width:'+pct+'%"></div></div>' +
                 '<div class="progress-label">' + f.currentWeight + ' / ' + f.goalWeight + ' lbs (' + pct + '%)</div>';
 
-            // Calendar
-            const year = now.getFullYear(), month = now.getMonth();
-            const firstDay = new Date(year, month, 1).getDay();
-            const daysInMonth = new Date(year, month+1, 0).getDate();
-            const today = now.getDate();
-            const gymSet = new Set(gymThisMonth);
-            let html = '<div class="calendar">';
-            ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d => html += '<div class="day-header">'+d+'</div>');
-            for(let i=0;i<firstDay;i++) html += '<div class="day empty"></div>';
-            for(let d=1;d<=daysInMonth;d++){
-                const dateStr = year+'-'+String(month+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
-                const cls = ['day'];
-                if(gymSet.has(dateStr)) cls.push('gym');
-                if(d===today) cls.push('today');
-                html += '<div class="'+cls.join(' ')+'">'+d+'</div>';
+            // Calendar with month navigation
+            let calYear = now.getFullYear(), calMonth = now.getMonth();
+            const allGymDays = f.gymDays;
+            const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+            function renderCalendar(y, m) {
+                const key = y + '-' + String(m+1).padStart(2,'0');
+                const gymSet = new Set(allGymDays[key] || []);
+                const firstDay = new Date(y, m, 1).getDay();
+                const daysInMonth = new Date(y, m+1, 0).getDate();
+                const isCurrentMonth = (y === now.getFullYear() && m === now.getMonth());
+                const today = isCurrentMonth ? now.getDate() : -1;
+
+                document.getElementById('cal-month-name').textContent = monthNames[m] + ' ' + y;
+
+                let html = '<div class="calendar">';
+                ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d => html += '<div class="day-header">'+d+'</div>');
+                for(let i=0;i<firstDay;i++) html += '<div class="day empty"></div>';
+                for(let d=1;d<=daysInMonth;d++){
+                    const dateStr = y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+                    const cls = ['day'];
+                    if(gymSet.has(dateStr)) cls.push('gym');
+                    if(d===today) cls.push('today');
+                    html += '<div class="'+cls.join(' ')+'">'+d+'</div>';
+                }
+                html += '</div>';
+                document.getElementById('calendar-container').innerHTML = html;
+
+                // Update workouts count for displayed month
+                document.getElementById('m-workouts').textContent = (allGymDays[key] || []).length;
             }
-            html += '</div>';
-            document.getElementById('calendar-container').innerHTML = html;
+
+            function changeMonth(delta) {
+                calMonth += delta;
+                if (calMonth < 0) { calMonth = 11; calYear--; }
+                if (calMonth > 11) { calMonth = 0; calYear++; }
+                renderCalendar(calYear, calMonth);
+            }
+
+            document.getElementById('cal-prev').addEventListener('click', () => changeMonth(-1));
+            document.getElementById('cal-next').addEventListener('click', () => changeMonth(1));
+
+            // Swipe support
+            let touchStartX = 0;
+            const calContainer = document.getElementById('calendar-container');
+            calContainer.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, {passive:true});
+            calContainer.addEventListener('touchend', e => {
+                const diff = e.changedTouches[0].clientX - touchStartX;
+                if (Math.abs(diff) > 50) changeMonth(diff < 0 ? 1 : -1);
+            }, {passive:true});
+
+            renderCalendar(calYear, calMonth);
 
             // Weight history
             const wh = document.getElementById('weight-history');
