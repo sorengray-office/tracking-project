@@ -61,17 +61,28 @@
   },
   "meetingBackgrounds": {
     "name": "MeetingBackgrounds.com",
-    "stage": "Pre-launch",
+    "stage": "Launched",
     "monthlyTraffic": 0,
-    "monthlyRevenue": 0,
-    "weeklyFocuses": ["Launch preparation", "Landing page optimization"],
+    "monthlyRevenue": 45.6,
+    "weeklyFocuses": ["Setup Google Ads", "Post on Twitter"],
     "targetLaunchDate": "2026-02-18",
     "launchTasks": [
-      "Place on directory TAAIFT",
       "Setup Google Ads",
       "Post on Twitter"
     ],
+    "recentWins": [
+      {
+        "date": "2026-02-22",
+        "text": "Launched on AI directory, first revenue"
+      }
+    ],
     "history": [
+      {
+        "date": "2026-02-22",
+        "monthlyTraffic": 0,
+        "monthlyRevenue": 45.6,
+        "stage": "Launched"
+      },
       {
         "date": "2026-02-18",
         "monthlyTraffic": 0,
@@ -107,14 +118,14 @@
     "revenueGoal": 15000,
     "weeklyFocuses": ["Marketing push", "Distribution channels"],
     "description": "Pre-built email template package added to website, ready for marketing push",
-    "biggestBlocker": "Marketing",
-    "activeChannels": ["Pinterest"],
-    "inProgressChannels": ["Facebook Ads"],
+    "biggestBlocker": "Checkout not working — needs fix",
+    "activeChannels": ["Pinterest", "Facebook Ads"],
+    "inProgressChannels": [],
     "plannedChannels": ["Google Ads", "Email list", "Twitter"],
     "todoItems": [
+      "Fix checkout flow",
       "Write email to email list about it",
       "Post to Twitter",
-      "Finish Facebook Ads creation",
       "Launch Google Ads"
     ],
     "history": [
