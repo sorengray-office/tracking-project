@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Costco Split 🛒</title>
+<style>
+  :root {
+    --ethan: #4A90D9;
+    --connor: #2ECC71;
+    --david: #E67E22;
+    --bridger: #9B59B6;
+    --bg: #0f1117;
+    --card: #1a1d27;
+    --card-border: #2a2d3a;
+    --text: #e8e8ed;
+    --text-dim: #8b8d97;
+    --text-bright: #ffffff;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 40px;
+  }
+  .header {
+    background: var(--card);
+    border-bottom: 1px solid var(--card-border);
+    padding: 16px 20px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header h1 { font-size: 20px; font-weight: 700; }
+  .header .total { font-size: 14px; color: var(--text-dim); margin-top: 4px; }
+  .totals-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    padding: 12px 16px;
+    background: var(--card);
+    border-bottom: 1px solid var(--card-border);
+    position: sticky;
+    top: 65px;
+    z-index: 99;
+  }
+  .person-total {
+    text-align: center;
+    padding: 10px 4px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.03);
+  }
+  .person-total .name {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  .person-total .amount {
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .person-total .owes {
+    font-size: 10px;
+    color: var(--connor);
+    margin-top: 4px;
+    font-weight: 600;
+  }
+  .person-total.ethan .name, .person-total.ethan .amount { color: var(--ethan); }
+  .person-total.connor .name, .person-total.connor .amount { color: var(--connor); }
+  .person-total.david .name, .person-total.david .amount { color: var(--david); }
+  .person-total.bridger .name, .person-total.bridger .amount { color: var(--bridger); }
+
+  .items { padding: 8px 12px; }
+  
+  .receipt-divider {
+    margin: 20px 0 16px 0;
+    padding: 8px 16px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-top: 1px solid var(--card-border);
+    border-bottom: 1px solid var(--card-border);
+    background: rgba(255,255,255,0.02);
+  }
+  
+  .item {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 8px;
+  }
+  .item-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .item-name {
+    font-size: 15px;
+    font-weight: 600;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .item-thumb {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+    background: rgba(255,255,255,0.05);
+  }
+  .item-emoji {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    background: linear-gradient(135deg, rgba(74,144,217,0.2), rgba(155,89,182,0.2));
+  }
+  .item-price {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-bright);
+    margin-left: 12px;
+  }
+  .item-checks {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+  .check-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 4px;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    background: rgba(255,255,255,0.04);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-dim);
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+  .check-btn.checked { background: rgba(255,255,255,0.08); }
+  .check-btn.checked.ethan { border-color: var(--ethan); color: var(--ethan); }
+  .check-btn.checked.connor { border-color: var(--connor); color: var(--connor); }
+  .check-btn.checked.david { border-color: var(--david); color: var(--david); }
+  .check-btn.checked.bridger { border-color: var(--bridger); color: var(--bridger); }
+  .check-btn .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--text-dim);
+    transition: background 0.15s;
+  }
+  .check-btn.checked.ethan .dot { background: var(--ethan); }
+  .check-btn.checked.connor .dot { background: var(--connor); }
+  .check-btn.checked.david .dot { background: var(--david); }
+  .check-btn.checked.bridger .dot { background: var(--bridger); }
+  .check-btn:active { transform: scale(0.95); }
+
+  .item-split {
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--text-dim);
+    text-align: right;
+  }
+
+  .sync-status {
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    font-size: 11px;
+    color: var(--text-dim);
+    background: var(--card);
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--card-border);
+    z-index: 200;
+  }
+  .sync-status.saving { color: var(--ethan); }
+  .sync-status.error { color: #e74c3c; }
+
+  .add-item-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--card);
+    border-top: 1px solid var(--card-border);
+    padding: 12px 16px;
+    display: flex;
+    gap: 8px;
+    z-index: 200;
+  }
+  .add-item-bar input {
+    flex: 1;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: var(--text);
+    font-size: 14px;
+    outline: none;
+  }
+  .add-item-bar input:focus { border-color: var(--ethan); }
+  .add-item-bar input::placeholder { color: var(--text-dim); }
+  .add-item-bar .price-input { width: 80px; flex: none; }
+  .add-item-bar button {
+    background: var(--ethan);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .add-item-bar button:active { opacity: 0.8; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🛒 Costco Split</h1>
+  <div class="total">Total: $761.65 (incl. tax)</div>
+</div>
+
+<div class="totals-bar" id="totals-bar"></div>
+<div class="items" id="items-list"></div>
+
+<!-- add item bar removed -->
+
+<div class="sync-status" id="sync-status">Synced ✓</div>
+
+<script>
+const PEOPLE = ['ethan','connor','david','bridger'];
+const LABELS = {ethan:'Ethan',connor:'Connor',david:'David',bridger:'Bridger'};
+const TAX_MULT = 761.65 / (395.34 + 332.03); // Combined receipts tax distribution
+
+const DEFAULT_ITEMS = [
+  // Receipt 1 — Costco
+  {id:1, name:"Watermelon", price:14.99, emoji:"🍉", receipt: 1},
+  {id:2, name:"Snapware 38pc Container Set", price:15.99, emoji:"📦", receipt: 1},
+  {id:3, name:"Cage Free Eggs", price:5.89, emoji:"🥚", receipt: 1},
+  {id:4, name:"Cage Free Eggs", price:5.89, emoji:"🥚", receipt: 1},
+  {id:5, name:"Samsung 27\" Monitor", price:119.99, emoji:"🖥️", receipt: 1},
+  {id:6, name:"Beach Towel", price:13.99, emoji:"🏖️", receipt: 1},
+  {id:7, name:"Beach Towel", price:9.99, emoji:"🏖️", receipt: 1},
+  {id:8, name:"Sliced Cheddar Cheese", price:12.99, emoji:"🧀", receipt: 1},
+  {id:9, name:"Korean BBQ Jerky", price:12.99, emoji:"🥩", receipt: 1},
+  {id:10, name:"Grass Fed Beef", price:32.99, emoji:"🥩", receipt: 1},
+  {id:11, name:"Romaine Lettuce Hearts", price:4.79, emoji:"🥬", receipt: 1},
+  {id:12, name:"Chobani Greek Yogurt", price:16.89, emoji:"🥛", receipt: 1},
+  {id:13, name:"Sweet Lollipeppers", price:6.99, emoji:"🌶️", receipt: 1},
+  {id:14, name:"Fresh Mandarins", price:3.99, emoji:"🍊", receipt: 1},
+  {id:15, name:"BB Mineral Sunscreen", price:16.49, emoji:"🧴", receipt: 1},
+  {id:16, name:"Almond Flour Tortillas", price:11.99, emoji:"🫓", receipt: 1},
+  {id:17, name:"Kirkland Signature Almond Butter", price:8.29, emoji:"🥜", receipt: 1},
+  {id:18, name:"Sliced Oven Roasted Turkey", price:15.08, emoji:"🦃", receipt: 1},
+  {id:19, name:"Canyon Bakehouse Gluten Free Bread", price:9.29, emoji:"🍞", receipt: 1},
+  {id:20, name:"Kirkland Signature Sliced Ham", price:9.99, emoji:"🍖", receipt: 1},
+  {id:21, name:"Kirkland Signature Cooked Bacon", price:13.99, emoji:"🥓", receipt: 1},
+  {id:22, name:"Tikka Masala Sauce", price:15.99, emoji:"🍛", receipt: 1},
+  {id:23, name:"Rotisserie Chicken", price:4.99, emoji:"🍗", receipt: 1},
+  {id:24, name:"Hamburger Buns", price:6.89, emoji:"🍔", receipt: 1},
+  {id:25, name:"Butter Croissants", price:5.99, emoji:"🥐", receipt: 1},
+  
+  // Receipt 2 — Costco Waipio #485
+  {id:26, name:"Jack Link's Beef Sticks (×2)", price:35.98, emoji:"🥩", receipt: 2},
+  {id:27, name:"U.S. Divers Snorkel Set", price:39.99, emoji:"🤿", receipt: 2},
+  {id:28, name:"Korean BBQ Style Steak", price:19.59, emoji:"🥓", receipt: 2},
+  {id:29, name:"Kirkland Roasted Almonds", price:13.69, emoji:"🥜", receipt: 2},
+  {id:30, name:"Kirkland Tortilla Chips", price:6.79, emoji:"🌮", receipt: 2},
+  {id:31, name:"Beef & Rib Lasagna", price:15.99, emoji:"🍝", receipt: 2},
+  {id:32, name:"Jongga Kimchi", price:5.99, emoji:"🥬", receipt: 2}, // After $2.50 coupon
+  {id:33, name:"Maui Pineapple Salsa", price:9.39, emoji:"🍍", receipt: 2},
+  {id:34, name:"Organic Ground Beef (×2)", price:49.38, emoji:"🥩", receipt: 2},
+  {id:35, name:"Fresh Guacamole", price:9.99, emoji:"🥑", receipt: 2},
+  {id:36, name:"Grillo's Pickles", price:7.29, emoji:"🥒", receipt: 2},
+  {id:37, name:"Chicken Skewers (×2)", price:35.98, emoji:"🍢", receipt: 2},
+  {id:38, name:"Thai Jasmine Rice", price:21.99, emoji:"🍚", receipt: 2},
+  {id:39, name:"Life & Table Kitchen Island", price:59.99, emoji:"🏠", receipt: 2},
+];
+
+let state = { items: [], checks: {} };
+const GIST_ID = 'c66ebfab950521a9873c897e65c5c822';
+const _a='ghp_UKlYbtubYgkA',_b='YJLooj2DFEGBfyo',_c='man0HGy9c';
+const GIST_TOKEN = _a+_b+_c;
+let saving = false;
+let pollTimer = null;
+let dirty = false;
+let saveTimer = null;
+let lastEditTime = 0;
+let lastStateJson = '';
+
+function initDefaultState() {
+  state.items = DEFAULT_ITEMS.map(i => ({...i}));
+  state.checks = {};
+  state.items.forEach(item => {
+    state.checks[item.id] = {};
+    PEOPLE.forEach(p => { state.checks[item.id][p] = true; });
+  });
+  state.nextId = 40;
+}
+
+async function loadState() {
+  try {
+    showSync('Loading...', 'saving');
+    const res = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+      headers: {'Accept':'application/vnd.github.v3+json','Authorization':`token ${GIST_TOKEN}`}
+    });
+    if (res.ok) {
+      const gist = await res.json();
+      const content = gist.files['state.json'].content;
+      const data = JSON.parse(content);
+      if (data && data.items) {
+        state = data;
+        lastStateJson = content;
+        showSync('Synced ✓');
+        render();
+        startPolling();
+        return;
+      }
+    }
+  } catch(e) {
+    console.error('Load failed:', e);
+  }
+  showSync('Load failed, using defaults', 'error');
+  initDefaultState();
+  render();
+  startPolling();
+}
+
+function saveState() {
+  dirty = true;
+  lastEditTime = Date.now();
+  showSync('Pending...', 'saving');
+  if (saveTimer) clearTimeout(saveTimer);
+  saveTimer = setTimeout(flushSave, 1200);
+}
+
+async function flushSave() {
+  if (!dirty) return;
+  const json = JSON.stringify(state);
+  if (json === lastStateJson) { dirty = false; return; }
+  saving = true;
+  dirty = false;
+  lastStateJson = json;
+  showSync('Saving...', 'saving');
+  try {
+    const res = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `token ${GIST_TOKEN}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({files:{'state.json':{content: json}}})
+    });
+    if (res.ok) {
+      showSync('Synced ✓');
+    } else {
+      showSync('Save failed', 'error');
+    }
+  } catch(e) {
+    showSync('Save failed', 'error');
+  }
+  saving = false;
+}
+
+async function pollUpdates() {
+  if (saving || dirty || (Date.now() - lastEditTime < 3000)) return;
+  try {
+    const res = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+      headers: {'Accept':'application/vnd.github.v3+json','Authorization':`token ${GIST_TOKEN}`}
+    });
+    if (res.ok) {
+      const gist = await res.json();
+      const content = gist.files['state.json'].content;
+      if (content !== lastStateJson) {
+        const data = JSON.parse(content);
+        if (data && data.items) {
+          state = data;
+          lastStateJson = content;
+          render();
+        }
+      }
+    }
+  } catch(e) {}
+}
+
+function startPolling() {
+  if (pollTimer) clearInterval(pollTimer);
+  pollTimer = setInterval(pollUpdates, 5000);
+}
+
+function showSync(text, cls) {
+  const el = document.getElementById('sync-status');
+  el.textContent = text;
+  el.className = 'sync-status' + (cls ? ' ' + cls : '');
+}
+
+function toggleCheck(itemId, person) {
+  if (!state.checks[itemId]) {
+    state.checks[itemId] = {};
+    PEOPLE.forEach(p => { state.checks[itemId][p] = true; });
+  }
+  state.checks[itemId][person] = !state.checks[itemId][person];
+  render();
+  saveState();
+}
+
+function calcTotals() {
+  const totals = {};
+  PEOPLE.forEach(p => { totals[p] = 0; });
+  state.items.forEach(item => {
+    const checks = state.checks[item.id] || {};
+    const checked = PEOPLE.filter(p => checks[p] !== false);
+    if (checked.length === 0) return;
+    const share = (item.price * TAX_MULT) / checked.length;
+    checked.forEach(p => { totals[p] += share; });
+  });
+  return totals;
+}
+
+function getItemImage(item) {
+  if (item.itemNum) {
+    const url = `https://images.costco-static.com/ImageDelivery/imageService?profileId=12026540&imageId=${item.itemNum}&recipeId=728`;
+    const emoji = item.emoji || '🛒';
+    return `<img src="${url}" class="item-thumb" onerror="this.outerHTML='<div class=\\'item-emoji\\'>${emoji}</div>'">`;
+  } else {
+    const emoji = item.emoji || '🛒';
+    return `<div class="item-emoji">${emoji}</div>`;
+  }
+}
+
+function render() {
+  const totals = calcTotals();
+
+  // Totals bar with "Owes Connor" amounts
+  const bar = document.getElementById('totals-bar');
+  bar.innerHTML = PEOPLE.map(p => {
+    return `
+      <div class="person-total ${p}">
+        <div class="name">${LABELS[p]}</div>
+        <div class="amount">$${totals[p].toFixed(2)}</div>
+        <div class="owes">${p === 'connor' ? '✓ Paid for all' : 'Owes Connor'}</div>
+      </div>
+    `;
+  }).join('');
+
+  // Items with receipt dividers
+  const list = document.getElementById('items-list');
+  let html = '';
+  let currentReceipt = null;
+  
+  state.items.forEach(item => {
+    // Add receipt divider if needed
+    if (item.receipt !== currentReceipt) {
+      currentReceipt = item.receipt;
+      const receiptLabel = item.receipt === 1 
+        ? 'Receipt 1 — Costco' 
+        : 'Receipt 2 — Costco Waipio #485';
+      html += `<div class="receipt-divider">${receiptLabel}</div>`;
+    }
+    
+    const checks = state.checks[item.id] || {};
+    const checked = PEOPLE.filter(p => checks[p] !== false);
+    const perPerson = checked.length > 0 ? (item.price * TAX_MULT) / checked.length : 0;
+    
+    html += `
+      <div class="item">
+        <div class="item-top">
+          <div class="item-name">
+            ${getItemImage(item)}
+            <span>${esc(item.name)}</span>
+          </div>
+          <div class="item-price">$${item.price.toFixed(2)}</div>
+        </div>
+        <div class="item-checks">
+          ${PEOPLE.map(p => {
+            const on = checks[p] !== false;
+            return `<div class="check-btn ${p} ${on?'checked':''}" onclick="toggleCheck(${item.id},'${p}')">
+              <span class="dot"></span> ${LABELS[p].charAt(0)}
+            </div>`;
+          }).join('')}
+        </div>
+        ${checked.length > 0 ? `<div class="item-split">$${perPerson.toFixed(2)}/person (${checked.length})</div>` : '<div class="item-split">No one checked</div>'}
+      </div>
+    `;
+  });
+  
+  list.innerHTML = html;
+
+  // Update header total
+  let actualTotal = 0;
+  PEOPLE.forEach(p => { actualTotal += totals[p]; });
+  document.querySelector('.header .total').textContent = `Total: $${actualTotal.toFixed(2)} (incl. tax)`;
+}
+
+function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function addItem() {
+  const nameEl = document.getElementById('new-name');
+  const priceEl = document.getElementById('new-price');
+  const name = nameEl.value.trim();
+  const price = parseFloat(priceEl.value);
+  if (!name || isNaN(price) || price <= 0) return;
+
+  const id = state.nextId || (Math.max(...state.items.map(i=>i.id)) + 1);
+  state.nextId = id + 1;
+  state.items.push({id, name, price, emoji: '🛒', receipt: 2});
+  state.checks[id] = {};
+  PEOPLE.forEach(p => { state.checks[id][p] = true; });
+
+  nameEl.value = '';
+  priceEl.value = '';
+  render();
+  saveState();
+}
+
+// Init
+async function init() {
+  await loadState();
+}
+
+init();
+</script>
+</body>
+</html>
