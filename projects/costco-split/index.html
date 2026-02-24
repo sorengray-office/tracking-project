@@ -28,47 +28,57 @@
   .header {
     background: var(--card);
     border-bottom: 1px solid var(--card-border);
-    padding: 16px 20px;
+    padding: 12px 20px;
     text-align: center;
     position: sticky;
     top: 0;
     z-index: 100;
   }
   .header h1 { font-size: 20px; font-weight: 700; }
-  .header .total { font-size: 14px; color: var(--text-dim); margin-top: 4px; }
+  .header .total { font-size: 14px; color: var(--text-dim); margin-top: 2px; }
   .totals-bar {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    padding: 12px 16px;
+    gap: 6px;
+    padding: 8px 12px;
     background: var(--card);
     border-bottom: 1px solid var(--card-border);
     position: sticky;
-    top: 65px;
+    top: 52px;
     z-index: 99;
   }
   .person-total {
     text-align: center;
-    padding: 10px 4px;
-    border-radius: 10px;
+    padding: 6px 2px;
+    border-radius: 8px;
     background: rgba(255,255,255,0.03);
   }
   .person-total .name {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
   }
   .person-total .amount {
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 700;
   }
   .person-total .owes {
-    font-size: 10px;
+    font-size: 9px;
     color: var(--connor);
-    margin-top: 4px;
+    margin-top: 2px;
     font-weight: 600;
+  }
+  @media (max-width: 600px) {
+    .header { padding: 8px 16px; }
+    .header h1 { font-size: 16px; }
+    .header .total { font-size: 12px; margin-top: 1px; }
+    .totals-bar { gap: 4px; padding: 6px 8px; top: 40px; }
+    .person-total { padding: 4px 2px; }
+    .person-total .name { font-size: 9px; margin-bottom: 1px; }
+    .person-total .amount { font-size: 13px; }
+    .person-total .owes { font-size: 8px; margin-top: 1px; }
   }
   .person-total.ethan .name, .person-total.ethan .amount { color: var(--ethan); }
   .person-total.connor .name, .person-total.connor .amount { color: var(--connor); }
